@@ -8,7 +8,7 @@
  * One is the driver and the other one is the shooter.
  */
 
-const game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', {
+const game = new Phaser.Game(1920, 1080, Phaser.AUTO, 'game', {
   preload: preload,
   create: create,
   update: update,
@@ -47,9 +47,10 @@ const SONGS = [
 ];
 
 function preload () {
-  game.load.json('dueling_banjos_meta', '../../assets/music/dueling_banjos.json');
-  game.load.json('jailhouse_now_meta', '../../assets/music/jailhouse_now.json');
-  // game.load.image('logo', 'assets/logo.png');
+  game.load.json('dueling_banjos_meta', 'assets/music/dueling_banjos.json');
+  game.load.json('jailhouse_now_meta', 'assets/music/jailhouse_now.json');
+  game.load.image('mountains', 'assets/imgs/layer-2-mountain-grey.png');
+  game.load.image('sky', 'assets/imgs/layer-1-sky.png');
   // game.load.image('note', 'assets/game/note.png');
   // game.load.image('mountain', 'assets/game/mountain.png')
   // game.load.image('earth', 'assets/game/scorched_earth.png');
@@ -59,6 +60,11 @@ function preload () {
 }
 
 function create () {
+  sky = game.add.image(0,0, 'sky')
+  mountains = game.add.image(0, 0, 'mountains')//.anchor.set(0.5);
+
+  // background = game.add.tileSprite(0, 0, 1400, 900, "mountains");
+
   const airconsole = new AirConsole();
 
   // As soon as a device connects we add it to our device-map
@@ -147,7 +153,6 @@ function create () {
     });
 
     // Get a random song that hasn't been played yet.
-
     const unplayedSongIndex = _.findIndex(SONGS, song => {
       return !song.played;
     });
