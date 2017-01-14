@@ -15,11 +15,14 @@ const game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', {
   render: render
 });
 
-const STATE_STARTED = 'STARTED'
-const STATE_WAITING = 'WAITING'
-const STATE_END     = 'END'
+const STATE = {
+  WAITING: 0, // Waiting for more players to join
+  PLAYING: 1, // Players selecting notes
+  RESULTS: 2, // Showing results of players input, updating
+};
 
-let currentState = STATE_WAITING
+
+let currentState = STATE.WAITING;
 
 const players = [
   {
@@ -30,7 +33,7 @@ const players = [
     score: 0,
     notes: []
   }
-]
+];
 
 const SONGS = [
   {
@@ -41,7 +44,7 @@ const SONGS = [
     name: 'jailhouse_now',
     played: false
   }
-]
+];
 
 function preload () {
   game.load.json('dueling_banjos_meta', '../../assets/music/dueling_banjos.json');
@@ -68,11 +71,32 @@ function create () {
     const player = airconsole.convertDeviceIdToPlayerNumber(device_id);
     if (player) {
       // Player that was in game left the game.
-      // Setting active players to length 0.
-      airconsole.setActivePlayers(0);
+      // Reset game
+      endGame()
     }
     checkTwoPlayers();
   };
+
+    /**
+     * Checks if two players are connected!
+     */
+    function checkTwoPlayers() {
+
+      // Only update if the game didn't have active players.
+      if (currentState == STATE.WAITING) {
+        if (connected_controllers.length >= 2) {
+          // Enough controller devices connected to start the game.
+          startGame()
+        } else {
+          // Show waiting for 1 or 2 more players
+          // Still in waiting state
+        }
+      } else {
+        // We already have people playing the game
+        // State is either PLAYING or RESULTS and should remain that
+      }
+    }
+  }
 
   // onMessage is called everytime a device sends a message with the .message() method
   airconsole.onMessage = function(device_id, data) {
@@ -91,46 +115,27 @@ function create () {
       // Perform animations: http://phaser.io/examples/v2/animation/animation-events
       players.forEach(player => {
 
-      })
+      });
       sendNewSong()
     }
   };
 
   game.camera.focusOnXY(0, 0);
 
-  /**
-   * Checks if two players are connected!
-   */
-  function checkTwoPlayers() {
-    var active_players = airconsole.getActivePlayerDeviceIds();
-    var connected_controllers = airconsole.getControllerDeviceIds();
-    // Only update if the game didn't have active players.
-    if (active_players.length == 0) {
-      if (connected_controllers.length >= 2) {
-        // Enough controller devices connected to start the game.
-        // Setting the first 2 controllers to active players.
-        airconsole.setActivePlayers(2);
-        document.getElementById("wait").innerHTML = "";
-        // Once we get two players, set the current state to "STARTED"
-        startGame()
-      } else if (connected_controllers.length == 1) {
-        document.getElementById("wait").innerHTML = "Need 1 more player!";
-      } else if (connected_controllers.length == 0) {
-        document.getElementById("wait").innerHTML = "Need 2 more players!";
-      }
-    }
-  }
-
   function startGame() {
-    currentState = STATE_STARTED
+    stopClip();
+
+    // Setting the first 2 controllers to active players.
+    airconsole.setActivePlayers(2);
+    currentState = STATE.STARTED;
 
     players.forEach(player => {
       player.score = 0
-    })
+    });
 
     SONGS.forEach(song => {
       song.played = false
-    })
+    });
 
     // Emit the first song.
     sendNewSong()
@@ -139,7 +144,7 @@ function create () {
   function sendNewSong() {
     players.forEach(player => {
       player.notes = []
-    })
+    });
 
     // Get a random song that hasn't been played yet.
 
@@ -148,12 +153,12 @@ function create () {
     });
 
     if(unplayedSongIndex < 0) {
-      console.log('ALL SONGS PLAYED. END GAME.')
+      console.log('ALL SONGS PLAYED. END GAME.');
       //TODO end game.
     }
     else {
-      SONGS[unplayedSongIndex].played = true
-      const song = SONGS[unplayedSongIndex]
+      SONGS[unplayedSongIndex].played = true;
+      const song = SONGS[unplayedSongIndex];
 
       const song_meta = game.cache.getJSON(`${song.name}_meta`);
 
@@ -170,22 +175,41 @@ function create () {
       // TODO: Set current state.song
     }
   }
+
+  function endGame() {
+    stopClip();
+    airconsole.setActivePlayers(0);
+    currentState = STATE.WAITING;
+
+    // Update page to show waiting display, or wait for update to be re-ran
+    // Update controllers with new state
+
+  }
+
 }
 
 function update () {
-  if (currentState === STATE_WAITING) {
+  if (currentState === STATE.WAITING) {
 
   }
 
-  if (currentState === STATE_STARTED) {
+  if (currentState === STATE.PLAYING) {
 
   }
 
-  if (currentState === STATE_END) {
+  if (currentState === STATE.RESULTS) {
 
   }
 }
 
 function render () {
   game.debug.text(`Game is running.`);
+}
+
+function playClip(clip) {
+  // play sound
+}
+
+function stopClip() {
+  // stop sound
 }
