@@ -1,4 +1,4 @@
-const NOTES = ['d', 'f', 'a', 'c', 'e', 'g']
+const NOTES = [0,1,2,3,4,5]
 
 // =======================================
 // Create the AirConsole instance
@@ -23,7 +23,7 @@ airconsole.onMessage = function(device_id, data) {
       $staff.empty()
       for (let i = 5; i >= 0; i--) {
         let $row = $(`<tr id="row_${NOTES[i]}"></tr>`)
-        for (let j = 0; j <= notes.length; j++) {
+        for (let j = 0; j < data.numNotes; j++) {
           let id = `${NOTES[i]}-${j}`
           let $button = $(
             `<div class="note-selector">
@@ -39,7 +39,6 @@ airconsole.onMessage = function(device_id, data) {
             // Check or uncheck the button.
             const checked = $(this).find('input').prop('checked')
             $(this).find('input').prop('checked', !checked)
-
           })
 
           let $td = $('<td></td>')
