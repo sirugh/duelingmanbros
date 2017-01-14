@@ -1,4 +1,4 @@
-const NOTES = ['d', 'f', 'a', 'c', 'e', 'g']
+const NOTES = [0,1,2,3,4,5]
 
 // =======================================
 // Create the AirConsole instance
@@ -22,9 +22,10 @@ airconsole.onMessage = function(device_id, data) {
       // Generate the new staff top-down, left-right.
       $staff.empty()
       for (let i = 5; i >= 0; i--) {
-        let $row = $(`<tr id="row_${NOTES[i]}"></tr>`)
-        for (let j = 0; j <= notes.length; j++) {
-          let id = `${NOTES[i]}-${j}`
+        let $row = $(`<tr id="row_${i}"></tr>`)
+        for (let j = 0; j < data.numNotes; j++) {
+          // id == row#-column#
+          let id = `${i}-${j}`
           let $button = $(
             `<div class="note-selector">
                 <input id="${id}" type="checkbox" value="${id}" data-col="${j}"/>
@@ -39,7 +40,6 @@ airconsole.onMessage = function(device_id, data) {
             // Check or uncheck the button.
             const checked = $(this).find('input').prop('checked')
             $(this).find('input').prop('checked', !checked)
-
           })
 
           let $td = $('<td></td>')
@@ -51,6 +51,8 @@ airconsole.onMessage = function(device_id, data) {
         $staff.append($row)
       }
 
+      // Check the first note for the player. Cause we be nice.
+      $staff.find(`input[id="${data.startingNote}-0"]`).prop('checked', true)
       // TODO: this should work outside the sim.
       // navigator.vibrate(1000);
     }

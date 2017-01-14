@@ -32,14 +32,27 @@ const players = [
   }
 ]
 
+const SONGS = [
+  {
+    name: 'dueling_banjos',
+    played: false
+  },
+  {
+    name: 'jailhouse_now',
+    played: false
+  }
+]
+
 function preload () {
-    // game.load.image('logo', 'assets/logo.png');
-    // game.load.image('note', 'assets/game/note.png');
-    // game.load.image('mountain', 'assets/game/mountain.png')
-    // game.load.image('earth', 'assets/game/scorched_earth.png');
-    // game.load.atlas('tank', 'assets/game/tanks.png', 'assets/game/tanks.json');
-    // game.load.atlas('enemy', 'assets/game/enemy-tanks.png', 'assets/game/tanks.json');
-    // game.load.spritesheet('kaboom', 'assets/game/explosion.png', 64, 64, 23);
+  game.load.json('dueling_banjos_meta', '../../assets/music/dueling_banjos.json');
+  game.load.json('jailhouse_now_meta', '../../assets/music/jailhouse_now.json');
+  // game.load.image('logo', 'assets/logo.png');
+  // game.load.image('note', 'assets/game/note.png');
+  // game.load.image('mountain', 'assets/game/mountain.png')
+  // game.load.image('earth', 'assets/game/scorched_earth.png');
+  // game.load.atlas('tank', 'assets/game/tanks.png', 'assets/game/tanks.json');
+  // game.load.atlas('enemy', 'assets/game/enemy-tanks.png', 'assets/game/tanks.json');
+  // game.load.spritesheet('kaboom', 'assets/game/explosion.png', 64, 64, 23);
 }
 
 function create () {
@@ -115,6 +128,10 @@ function create () {
       player.score = 0
     })
 
+    SONGS.forEach(song => {
+      song.played = false
+    })
+
     // Emit the first song.
     sendNewSong()
   }
@@ -123,17 +140,35 @@ function create () {
     players.forEach(player => {
       player.notes = []
     })
-    for (var i = 1; i <= 2; i++) {
-      airconsole.message(
-        airconsole.convertPlayerNumberToDeviceId(i),
-        {
-          action: 'RESET_SONG',
-          song: 'Dueling Banjos',
-          numNotes: 12,// the number of notes that this song contains
-          startingNote: 'g'
-        })
+
+    // Get a random song that hasn't been played yet.
+
+    const unplayedSongIndex = _.findIndex(SONGS, song => {
+      return !song.played;
+    });
+
+    if(unplayedSongIndex < 0) {
+      console.log('ALL SONGS PLAYED. END GAME.')
+      //TODO end game.
     }
-    // TODO: Set current state.song
+    else {
+      SONGS[unplayedSongIndex].played = true
+      const song = SONGS[unplayedSongIndex]
+
+      const song_meta = game.cache.getJSON(`${song.name}_meta`);
+
+      for (var i = 1; i <= 2; i++) {
+        airconsole.message(
+          airconsole.convertPlayerNumberToDeviceId(i),
+          {
+            action: 'RESET_SONG',
+            song: song_meta.name,
+            numNotes: song_meta.pattern.length,
+            startingNote: song_meta.start
+          })
+      }
+      // TODO: Set current state.song
+    }
   }
 }
 
