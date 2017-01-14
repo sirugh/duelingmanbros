@@ -73,6 +73,7 @@ function create () {
     if (players[0].notes.length && players[1].notes.length) {
       console.log('Both players submitted!');
       // Do score calculations.
+      // TODO: Compare against state.song.notes
 
       // Perform animations: http://phaser.io/examples/v2/animation/animation-events
       players.forEach(player => {
@@ -132,6 +133,7 @@ function create () {
           startingNote: 'g'
         })
     }
+    // TODO: Set current state.song
   }
 }
 
