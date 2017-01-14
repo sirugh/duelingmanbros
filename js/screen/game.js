@@ -15,6 +15,15 @@ const game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', {
   render: render
 });
 
+const players = [
+  {
+    score: 0
+  },
+  {
+    score: 0
+  }
+];
+
 function preload () {
     // game.load.image('logo', 'assets/logo.png');
     // game.load.image('note', 'assets/game/note.png');
@@ -25,106 +34,86 @@ function preload () {
     // game.load.spritesheet('kaboom', 'assets/game/explosion.png', 64, 64, 23);
 }
 
-// ------------------------
-// AirConsole relevant vars
-
-// A map that holds the device_ids of the driver and the shooter
-var device_control_map = [];
-
-// A button-state map which indicates which buttons the driver has currently pressed
-var driver_device = {
-    left: 0,
-    right: 0,
-    up: false
-};
-
-// A button-state map which indicates which buttons the shooter has currently pressed
-var shooter_device = {
-    left: 0,
-    right: 0,
-    fire: false
-};
-// ------------------------
-
 function create () {
-  // =======================================================
-  // Create AirConsole instance
-  // =======================================================
   const  airconsole = new AirConsole();
 
-  const logo = game.add.text(0, 0, 'DUELING MAN-BROS', {
-    font: 'bold 32px Arial',
-    fill: '#fff',
-    boundsAlignH: 'center',
-    boundsAlignV: 'middle'
-  });
+  // As soon as a device connects we add it to our device-map
+  airconsole.onConnect = function(device_id) {
+    checkTwoPlayers();
+  };
 
-  // Send a message to each device to tell them the role (tank or shooter)
-  var setRoles = function() {
-    for (const [index, device_id] of device_control_map.entries()) {
-      // We only allow two players in this game
-      if (index >= 2) break;
+  // Called when a device disconnects (can take up to 5 seconds after device left)
+  airconsole.onDisconnect = function(device_id) {
+    const player = airconsole.convertDeviceIdToPlayerNumber(device_id);
+    if (player) {
+      // Player that was in game left the game.
+      // Setting active players to length 0.
+      airconsole.setActivePlayers(0);
+    }
+    checkTwoPlayers();
+  };
 
-      airconsole.message(device_id, {
-          action: "SET_ROLE",
-          role: `PLAYER${device_id}`
-      });
+  // onMessage is called everytime a device sends a message with the .message() method
+  airconsole.onMessage = function(device_id, data) {
+    const player = airconsole.convertDeviceIdToPlayerNumber(device_id);
+
+    // Store any input.
+    if (typeof player !== 'undefined' && data.notes) {
+      players[player].notes = data.notes;
+    }
+
+    //
+    if (players[0].notes && players[1].notes) {
+      console.log('Both players submitted!');
+      // Do score calculations.
+      // Display score changes.
+      // Perform animations: http://phaser.io/examples/v2/animation/animation-events
+      players.forEach(player => {
+        sendNewSong()
+      })
     }
   };
 
-    airconsole.onReady = function() {};
+  game.camera.focusOnXY(0, 0);
 
-    // As soon as a device connects we add it to our device-map
-    airconsole.onConnect = function(device_id) {
-        // Only first two devices can play
-        if (device_control_map.length < 2) {
-            device_control_map.push(device_id);
-            // Send a message back to the device, telling it which role it has (tank or shooter)
-            setRoles();
-        }
-        logo.kill();
-    };
+  function sendNewSong(player) {
+    airconsole.message(
+      airconsole.convertPlayerNumberToDeviceId(player),
+      {
+        action: 'RESET_SONG',
+        song: 'Get Schwifty',
+        numNotes: 12// the number of notes that this song contains
+      })
+  }
 
-    // Called when a device disconnects (can take up to 5 seconds after device left)
-    airconsole.onDisconnect = function(device_id) {
-        // Remove the device from the map
-        var index = device_control_map.indexOf(device_id);
-        if (index !== -1) {
-            device_control_map.splice(index, 1);
-            // Update roles
-            setRoles();
-        }
-    };
-
-    // onMessage is called everytime a device sends a message with the .message() method
-    airconsole.onMessage = function(device_id, data) {
-        // First in the array is always player 1
-        var player1  = device_control_map[0];
-        // Second in the array is always player 2
-        var player2 = device_control_map[1];
-
-        // If we get a message from player 1
-        if (player1 && device_id === player1) {
-          // Do stuff for player 1
-          // For example:
-          // Compare data.action (pressed buttons) to the required notes
-        }
-
-        // If we get a message from player 2
-        if (player2 && device_id === player2) {
-          // Do stuff for player 2.
-          // For example:
-          // Compare data.action (pressed buttons) to the required notes
-        }
-    };
-
-    game.camera.focusOnXY(0, 0);
+  /**
+   * Checks if two players are connected!
+   */
+  function checkTwoPlayers() {
+    var active_players = airconsole.getActivePlayerDeviceIds();
+    var connected_controllers = airconsole.getControllerDeviceIds();
+    // Only update if the game didn't have active players.
+    if (active_players.length == 0) {
+      if (connected_controllers.length >= 2) {
+        // Enough controller devices connected to start the game.
+        // Setting the first 2 controllers to active players.
+        airconsole.setActivePlayers(2);
+        document.getElementById("wait").innerHTML = "";
+      } else if (connected_controllers.length == 1) {
+        document.getElementById("wait").innerHTML = "Need 1 more player!";
+      } else if (connected_controllers.length == 0) {
+        document.getElementById("wait").innerHTML = "Need 2 more players!";
+      }
+    }
+  }
 }
 
 function update () {
-
+  // if(players[0].input && players[1].input) {
+  //   console.log('Updating after both players submitted input!')
+  // }
 }
 
 function render () {
-    game.debug.text(`Game is running.`);
+  game.debug.text(`Game is running.`);
 }
