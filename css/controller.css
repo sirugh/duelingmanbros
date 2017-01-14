@@ -1,0 +1,77 @@
+body {
+  background-image: url("../assets/imgs/ControllerBackground.png");
+  background-size: cover;
+}
+
+#clef {
+  height: 95vh;
+  width: 10vw;
+  opacity: .3;
+  position: absolute;
+}
+
+#submit {
+  position: absolute;
+  right: 2vw;
+  bottom: 2vw;
+  width: 10%;
+}
+
+table#staff {
+  left:17em;
+  position:absolute;
+  height: 32em;
+  width: 54em;
+  // opacity: 0.4;
+  // background:red;
+}
+
+table.note-selector {
+  opacity: 1;
+}
+
+.note-selector input{
+  margin:0;padding:0;
+  -webkit-appearance:none;
+     -moz-appearance:none;
+          appearance:none;
+}
+
+.note-selector input:active + .note-label {
+  opacity: .9;
+}
+
+.note-selector input + .note-label {
+  background-image:url(../assets/imgs/ButtonOff.png);
+}
+
+.note-selector input:checked + .note-label {
+  background-image:url(../assets/imgs/ButtonOn.png);
+  -webkit-filter: none;
+     -moz-filter: none;
+          filter: none;
+}
+.note-label {
+    cursor:pointer;
+    background-size:contain;
+    background-repeat:no-repeat;
+    display:inline-block;
+    width:100px;height:70px;
+    // -webkit-transition: all 20ms ease-in;
+    //    -moz-transition: all 20ms ease-in;
+    //         transition: all 20ms ease-in;
+    -webkit-filter: brightness(1.8) grayscale(1) opacity(.7);
+       -moz-filter: brightness(1.8) grayscale(1) opacity(.7);
+            filter: brightness(1.8) grayscale(1) opacity(.7);
+}
+/* .drinkcard-cc:hover{
+    -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
+       -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
+            filter: brightness(1.2) grayscale(.5) opacity(.9);
+}
+ */
+/* Extras */
+a:visited{color:#888}
+a{color:#444;text-decoration:none;}
+p{margin-bottom:.3em;}
+* { font-family:monospace; }
