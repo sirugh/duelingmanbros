@@ -15,6 +15,7 @@ airconsole.onMessage = function(device_id, data) {
   const actions = {
     RESET_SONG: function (data) {
       $('#song_title').html(`SONG: "${data.song}"`)
+
       notes = new Array(data.numNotes)
       notes[0] = data.startingNote
 
@@ -23,11 +24,30 @@ airconsole.onMessage = function(device_id, data) {
       for (let i = 5; i >= 0; i--) {
         let $row = $(`<tr id="row_${NOTES[i]}"></tr>`)
         for (let j = 0; j <= notes.length; j++) {
-          $row.append(
-            `<td class="note">
-              <button id="${NOTES[i]}-${j}">${NOTES[i]}</button>
-            </td>`)
+          let id = `${NOTES[i]}-${j}`
+          let $button = $(
+            `<div class="note-selector">
+                <input id="${id}" type="checkbox" value="${id}" data-col="${j}"/>
+                <label class="note-label" for="button${id}"></label>
+              </div>`)
+
+          $button.on('click', function () {
+            // Uncheck all other buttons in the column
+            const column = $(this).find('input').data('col')
+            $(`table input[data-col="${column}"]`).prop('checked', false)
+
+            // Check or uncheck the button.
+            const checked = $(this).find('input').prop('checked')
+            $(this).find('input').prop('checked', !checked)
+
+          })
+
+          let $td = $('<td></td>')
+
+          $td.append($button)
+          $row.append($td)
         }
+
         $staff.append($row)
       }
 
