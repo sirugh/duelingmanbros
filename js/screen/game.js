@@ -164,8 +164,7 @@ function create () {
             action: 'RESET_SONG',
             song: song_meta.name,
             numNotes: song_meta.pattern.length,
-            startingNote: song_meta.start,
-            pattern: song_meta.pattern
+            startingNote: song_meta.start
           })
       }
       // TODO: Set current state.song
