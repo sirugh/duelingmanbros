@@ -1,4 +1,6 @@
 var Splash = function () {};
+var cloud1;
+var cloud2;
 
 Splash.prototype = {
 
@@ -15,7 +17,9 @@ Splash.prototype = {
   // varios freebies found from google image search
   loadImages: function () {
     game.load.image('mountains', 'assets/images/layer-2-mountain-grey.png');
-    game.load.image('sky', 'assets/images/layer-1-sky.png');
+    //game.load.image('sky', 'assets/images/layer-1-sky.png');
+    game.load.image('sky', 'assets/images/Background-sky-cloudless.png');
+    game.load.image('cloud', 'assets/images/Cloud.png');
   },
 
   loadFonts: function () {
