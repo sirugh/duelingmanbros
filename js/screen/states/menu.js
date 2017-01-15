@@ -82,6 +82,7 @@ GameMenu.prototype = {
   getRandomCloudHeight: function () {
     return Math.floor(game.rnd.realInRange(0, 1) * (game.world.height / 2))
   },
+
   /**
    * Sets up airconsole listeners.
    */
