@@ -54,13 +54,21 @@ Game.prototype = {
     sendNewSong(getNextSong());
 
     function replayCurrentSong() {
-      const self = this
+      const width = game.cache.getImage(`${this.currentSong.name}_answer`).width;
+      const height = game.cache.getImage(`${this.currentSong.name}_answer`).height;
+
+      const x = (game.world.width / 2) - (width / 2)
+      const y = (game.world.height / 2) - (height / 2)
+      const answer = game.add.image(x, y, `${this.currentSong.name}_answer`);
       return new Promise ((resolve, reject) => {
-        // music = game.add.audio(self.currentSong.name);
         music.play();
         music.onStop.addOnce(function () {
           console.log('Song playback finished.')
-          resolve()
+          const tween = game.add.tween(answer).to( { alpha: 0 }, 1000, "Linear", true);
+          tween.onComplete.add(function () {
+            answer.kill()
+            resolve()
+          })
         })
       })
     }
@@ -119,7 +127,6 @@ Game.prototype = {
 
       if (players[0].notes.length && players[1].notes.length) {
         console.log('Both players submitted!');
-        displayCorrectAnswer()
         replayCurrentSong()
           .then(function () {
             stopNoteAnimation();
@@ -145,14 +152,6 @@ Game.prototype = {
           })
       }
     };
-
-    function displayCorrectAnswer () {
-      return new Promise((resolve, reject) => {
-        console.log(`Displaying answer for ${this.currentSong}`)
-        //TODO Display current song image for a few seconds.
-        resolve()
-      })
-    }
 
     function resetGame() {
       if (music) {

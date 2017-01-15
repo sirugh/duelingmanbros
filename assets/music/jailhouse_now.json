@@ -1,5 +1,5 @@
 {
-  "name": "Jailhouse Now",
+  "name": "jailhouse_now",
   "start": 0,
   "len": 9,
   "pattern": [0,1,0,0,0,5,4,0,5]

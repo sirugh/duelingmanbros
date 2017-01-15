@@ -16,6 +16,7 @@ Splash.prototype = {
     titles.forEach(title => {
       game.load.audio(title, `assets/music/${title}.mp3`)
       game.load.json(`${title}_meta`, `assets/music/${title}.json`);
+      game.load.image(`${title}_answer`, `assets/music/${title}_answer.png`)
     })
 
     game.load.audio('background_music', 'assets/music/jailhouse_now_full.mp3');
