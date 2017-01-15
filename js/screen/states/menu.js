@@ -34,6 +34,8 @@ GameMenu.prototype = {
     game.stage.disableVisibilityChange = true;
     game.add.existing(this.titleText);
     game.add.existing(this.waitingText);
+
+    this.createDeviceListeners();
   },
   generateClouds: function () {
     this.clouds = this.clouds || {}
@@ -76,5 +78,70 @@ GameMenu.prototype = {
   },
   getRandomCloudHeight: function () {
     return Math.floor(game.rnd.realInRange(0, 1) * (game.world.height / 2))
+  },
+  /**
+   * Sets up airconsole listeners.
+   */
+  createDeviceListeners: function () {
+    const self = this
+
+    airconsole.onConnect = function () {
+      var connected_controllers = airconsole.getControllerDeviceIds();
+      if (connected_controllers.length >= 2) {
+        console.log('SCREEN: 2 players connected.')
+        airconsole.setActivePlayers(2);
+
+        console.log('SCREEN: Displaying instructions.')
+
+        self.displayInstructions()
+          .then(function () {
+            console.log('SCREEN: Starting game.')
+            if (music) {
+              //TODO: figure out how to fade out music instead of hard stop.
+              music.stop()
+            }
+            emit('GAME_STARTING');
+            game.state.start('Game')
+          })
+
+      }
+      else {
+        emit('WAITING_FOR_PLAYERS')
+      }
+    }
+
+    airconsole.onDisconnect =  function (device_id) {
+      const player = airconsole.convertDeviceIdToPlayerNumber(device_id);
+      console.log(`Player ${player} disconnected. Going back to menu.`)
+
+      emit('WAITING_FOR_PLAYERS')
+
+      if (game.state.current !== 'Menu') {
+        game.state.start('Menu')
+      }
+    }
+  },
+  displayInstructions: function () {
+    game.add.tween(this.titleText).to( { alpha: 0 }, 1000, "Linear", true);
+    game.add.tween(this.waitingText).to( { alpha: 0 }, 1000, "Linear", true);
+    const INSTRUCTION_TIMEOUT = 10000; //TODO: set to 10000 when playing fo real
+    return new Promise((resolve, reject) => {
+      const instructionText = "- Instructions -\n" +
+                      "1. Listen to the sound clip.\n" +
+                      "2. Use the staff to enter what you think you hear.\n" +
+                      "3. The player who guessed closest gets points!\n" +
+                      "4. Highest score at the end wins the game.";
+      const style = { font: "65px Arial", fill: "#ff0044", align: "center" };
+      const text = game.add.text(game.world.centerX, game.world.centerY, instructionText, style);
+      text.anchor.set(0.5);
+      text.alpha = 1;
+
+      // After 5 seconds, fade out the instructions
+      setTimeout(function () {
+        const tween = game.add.tween(text).to( { alpha: 0 }, 1000, "Linear", true);
+        tween.onComplete.add(resolve)
+      }, INSTRUCTION_TIMEOUT)
+    })
   }
 };
+

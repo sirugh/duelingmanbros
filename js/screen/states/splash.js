@@ -3,8 +3,9 @@ var Splash = function () {};
 Splash.prototype = {
 
   loadScripts: function () {
-    game.load.script('menu', 'js/screen/states/menu.js')
-    game.load.script('game', 'js/screen/states/game.js')
+    game.load.script('menu', 'js/screen/states/menu.js');
+    game.load.script('game', 'js/screen/states/game.js');
+    game.load.script('scores', 'js/screen/states/scores.js');
   },
 
   loadMusic: function () {
@@ -49,47 +50,15 @@ Splash.prototype = {
   addGameStates: function () {
     game.state.add('Menu', GameMenu);
     game.state.add('Game', Game);
-    // game.state.add("GameOver",GameOver);
+    game.state.add("Scores", GameScores);
   },
 
   create: function() {
     this.status.setText('Ready!');
     this.addGameStates();
 
-    this.createDeviceListeners();
-
     setTimeout(function () {
       game.state.start('Menu');
     }, 1000);
-  },
-  /**
-   * Sets up airconsole listeners.
-   */
-  createDeviceListeners: function () {
-    airconsole.onConnect = function () {
-      var connected_controllers = airconsole.getControllerDeviceIds();
-      if (connected_controllers.length >= 2) {
-        console.log('2 players connected. Starting game.')
-        airconsole.setActivePlayers(2);
-        if (music) {
-          music.stop()
-        }
-        game.state.start('Game')
-      }
-      else {
-        emit('WAITING_FOR_PLAYERS')
-      }
-    }
-
-    airconsole.onDisconnect =  function (device_id) {
-      const player = airconsole.convertDeviceIdToPlayerNumber(device_id);
-      console.log(`Player ${player} disconnected. Going back to menu.`)
-
-      emit('WAITING_FOR_PLAYERS')
-
-      if (game.state.current !== 'Menu') {
-        game.state.start('Menu')
-      }
-    }
-  },
+  }
 };

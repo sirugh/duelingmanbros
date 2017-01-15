@@ -18,18 +18,18 @@ const SONGS = [
     name: 'jailhouse_now',
     played: false
   },
-  {
-    name: 'zelda_theme',
-    played: false
-  },
-  {
-    name: 'james_bond',
-    played: false
-  },
-  {
-    name: 'good_bad_ugly',
-    played: false
-  }
+  // {
+  //   name: 'zelda_theme',
+  //   played: false
+  // },
+  // {
+  //   name: 'james_bond',
+  //   played: false
+  // },
+  // {
+  //   name: 'good_bad_ugly',
+  //   played: false
+  // }
 ];
 
 const Game = function (game) {};
@@ -44,23 +44,18 @@ Game.prototype = {
     // Display gameplay background
     this.sky        = game.add.image(0, 0, 'sky');
     this.mountains  = game.add.image(0, 0, 'mountains');
-    
+
     // Create two german guys, one for each player
     this.german1    = game.add.image(224, game.world.height+572,'german');
     this.german2    = game.add.image(game.world.width-224, game.world.height+572, 'german');
     this.german1.scale.x *= -1;
-    emit('GAME_STARTING');
-    // TODO: Display Instruction text (for some time?)
-    displayInstructions()
-      .then(() => {
-        emit('START');
-        resetGame();
 
-        // Emit the first song.
-        let song = getNextSong();
-        sendNewSong(song)
-      });
+    resetGame();
 
+    // Emit the first song.
+    sendNewSong(getNextSong());
+
+    // On Receiving message from phone
     airconsole.onMessage = function(device_id, data) {
       const player = airconsole.convertDeviceIdToPlayerNumber(device_id);
 
@@ -106,33 +101,19 @@ Game.prototype = {
           sendNewSong(song)
         }
         else {
+
           console.log('No more songs. Game over!');
           //TODO game over.
-          // game.state.start('GameOver')
+          console.log(game.state.states);
+          game.state.start(
+            'Scores',
+            true,
+            false,
+            players[0].score > players[1].score ? "Player 1" : "Player 2",
+            players)
         }
       }
     };
-
-    function displayInstructions (callback) {
-      const INSTRUCTION_TIMEOUT = 1000; //TODO: set to 10000 when playing fo real
-      return new Promise((resolve, reject) => {
-        const instructionText = "- Instructions -\n" +
-                        "1. Listen to the sound clip.\n" +
-                        "2. Use the staff to enter what you think you hear.\n" +
-                        "3. The player who guessed closest gets points!\n" +
-                        "4. Highest score at the end wins the game.";
-        const style = { font: "65px Arial", fill: "#ff0044", align: "center" };
-        const text = game.add.text(game.world.centerX, game.world.centerY, instructionText, style);
-        text.anchor.set(0.5);
-        text.alpha = 1;
-
-        // After 5 seconds, fade out the instructions
-        setTimeout(function () {
-          game.add.tween(text).to( { alpha: 0 }, 1000, "Linear", true);
-          resolve()
-        }, INSTRUCTION_TIMEOUT)
-      })
-    }
 
     function resetGame() {
       if (music) {
