@@ -43,6 +43,7 @@ Game.prototype = {
   create: function () {
     // Display gameplay background
     this.sky        = game.add.image(0, 0, 'sky');
+    this.generateClouds()
     this.mountains  = game.add.image(0, 0, 'mountains');
 
     // Create two german guys, one for each player
@@ -101,16 +102,13 @@ Game.prototype = {
           sendNewSong(song)
         }
         else {
-
           console.log('No more songs. Game over!');
-          //TODO game over.
-          console.log(game.state.states);
-          game.state.start(
-            'Scores',
-            true,
-            false,
-            players[0].score > players[1].score ? "Player 1" : "Player 2",
-            players)
+          // Tell the controllers the game is over.
+          emit('END_GAME')
+
+          // Display the end game scene.
+          const winner = players[0].score > players[1].score ? 'Player 1' : 'Player 2'
+          game.state.start('Scores', true, false, winner, players)
         }
       }
     };
@@ -183,11 +181,45 @@ Game.prototype = {
     if (this.german2.y > game.world.height-this.german2.height) {
     	this.german2.y -= 3;
     }
+    this.updateClouds()
   },
 
   render: function () {
     game.debug.text(`
       Scores -- Player 1: ${players[0].score}\nPlayer 2: ${players[1].score}\n
     `, 0, 100);
-  }
+  },
+  generateClouds: function () {
+    this.clouds = this.clouds || {}
+
+    for (var i = 0; i < 3; i++) {
+      let prop = `cloud${i}`
+      let rand = game.rnd.realInRange(.5, 2);
+      // Create and scale the cloud.
+      this.clouds[prop] = game.add.sprite(game.world.randomX, this.getRandomCloudHeight(), 'cloud');
+      this.clouds[prop].scale.setTo(rand, rand);
+      // Set a random velocity
+      this.clouds[prop].velocity = game.rnd.realInRange(-.2, .2) * 30;
+    }
+  },
+  updateClouds: function () {
+    _.each(this.clouds, cloud => {
+      cloud.x += cloud.velocity
+      if (cloud.x > game.world.width) {  //if cloud leaves to right...
+        cloud.x = -cloud.width;      //set cloud to start of left of game screen
+        cloud.velocity = game.rnd.realInRange(-2, 2);   //set new random cloud velocity
+        cloud.y = this.getRandomCloudHeight()      //set new random cloud height
+      }
+      // if cloud leaves to left...
+      else if (cloud.x < -cloud.width) {
+        cloud.x = game.world.width;
+        cloud.velocity = game.rnd.realInRange(-2, 2);   //set new random cloud velocity
+
+        cloud.y = this.getRandomCloudHeight()
+      }
+    })
+  },
+  getRandomCloudHeight: function () {
+    return Math.floor(game.rnd.realInRange(0, 1) * (game.world.height / 2))
+  },
 };

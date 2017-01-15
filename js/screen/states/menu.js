@@ -60,6 +60,9 @@ GameMenu.prototype = {
     music.play();
   },
   update: function () {
+    this.updateClouds()
+  },
+  updateClouds: function () {
     _.each(this.clouds, cloud => {
       cloud.x += cloud.velocity
       if (cloud.x > game.world.width) {  //if cloud leaves to right...

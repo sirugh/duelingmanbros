@@ -63,12 +63,13 @@ airconsole.onMessage = function(device_id, data) {
     GAME_STARTING: function (data) {
       console.log('GAME STARTING')
       // Hide the overlay
+      hideInput()
       // Display the staff
     },
     END_GAME: function (data) {
       console.log('GAME END')
       hideInput()
-      $overlay.text('Game over! Thanks for playing.')
+      $overlay.text('Game over! Thanks for playing!')
     }
   }
 
