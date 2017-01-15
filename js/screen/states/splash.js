@@ -5,12 +5,19 @@ Splash.prototype = {
   loadScripts: function () {
     game.load.script('menu', 'js/screen/states/menu.js')
     game.load.script('game', 'js/screen/states/game.js')
-
-    game.load.json('dueling_banjos_meta', 'assets/music/dueling_banjos.json');
-    game.load.json('jailhouse_now_meta', 'assets/music/jailhouse_now.json');
   },
 
-  loadBgm: function () {
+  loadMusic: function () {
+    const titles = [
+      'dueling_banjos', 'jailhouse_now', 'good_bad_ugly', 'james_bond', 'zelda_theme'
+    ];
+
+    titles.forEach(title => {
+      game.load.audio(title, `assets/music/${title}.mp3`)
+      game.load.json(`${title}_meta`, `assets/music/${title}.json`);
+    })
+
+    game.load.audio('background_music', 'assets/music/jailhouse_now_full.mp3');
   },
   // varios freebies found from google image search
   loadImages: function () {
@@ -39,7 +46,7 @@ Splash.prototype = {
     this.loadScripts();
     this.loadImages();
     this.loadFonts();
-    this.loadBgm();
+    this.loadMusic();
   },
 
   addGameStates: function () {

@@ -23,7 +23,6 @@ GameMenu.prototype = {
   },
 
   preload: function () {
-    game.load.audio('background_music', 'assets/music/jailhouse_now_full.mp3');
   },
 
   create: function () {

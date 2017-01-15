@@ -36,8 +36,6 @@ const Game = function (game) {};
 
 Game.prototype = {
   preload: function () {
-    game.load.audio('jailhouse_now', 'assets/music/jailhouse_now.mp3');
-    game.load.audio('dueling_banjos', 'assets/music/dueling_banjos.mp3')
   },
   create: function () {
     // Display gameplay background
@@ -148,6 +146,8 @@ Game.prototype = {
       });
 
       //Play the song on screen as clue:
+      this.currentSong = game.cache.getJSON(`${songName}_meta`);
+      console.log(`Playing ${this.currentSong.name}`)
       music = game.add.audio(songName);
       music.play();
       music.onStop.add(function () {
@@ -169,5 +169,11 @@ Game.prototype = {
   },
   update: function () {
     // Update stuff goes here.
+  },
+
+  render: function () {
+    game.debug.text(`
+      Scores -- Player 1: ${players[0].score}\nPlayer 2: ${players[1].score}\n
+    `, 0, 100);
   }
 };
