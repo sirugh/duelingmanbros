@@ -80,6 +80,7 @@ Game.prototype = {
         else {
           console.log('No more songs. Game over!')
           //TODO game over.
+          // game.state.start('GameOver')
         }
       }
     };
@@ -166,12 +167,4 @@ Game.prototype = {
   update: function () {
     // Update stuff goes here.
   }
-}
-
-function playClip(clip) {
-  // play sound
-}
-
-function stopClip() {
-  // stop sound
 }
