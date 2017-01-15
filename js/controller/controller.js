@@ -13,9 +13,10 @@ const $staff = $('#staff')
 airconsole.onMessage = function(device_id, data) {
   // A mapping of action-to-behaviors.
   const actions = {
+    START: function (data) {
+      console.log('SCREEN HAS TRIGGERED START EVENT')
+    },
     RESET_SONG: function (data) {
-      $('#song_title').html(`SONG: "${data.song}"`)
-
       notes = new Array(data.numNotes)
       notes[0] = data.startingNote
 
@@ -55,6 +56,17 @@ airconsole.onMessage = function(device_id, data) {
       $staff.find(`input[id="${data.startingNote}-0"]`).prop('checked', true)
       // TODO: this should work outside the sim.
       // navigator.vibrate(1000);
+    },
+    WAITING_FOR_PLAYERS: function (data) {
+      console.log('STILL WAITING ON PLAYERS')
+    },
+    GAME_STARTING: function (data) {
+      console.log('GAME STARTING')
+      // Hide the overaly
+      // Display the staff
+    },
+    END_GAME: function (data) {
+      console.log('GAME END')
     }
   }
 

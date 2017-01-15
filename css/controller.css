@@ -1,5 +1,5 @@
 body {
-  background-image: url("../assets/imgs/ControllerBackground.png");
+  background-image: url("../assets/images/ControllerBackground.png");
   background-size: cover;
 }
 
@@ -43,11 +43,11 @@ table.note-selector {
 }
 
 .note-selector input + .note-label {
-  background-image:url(../assets/imgs/ButtonOff.png);
+  background-image:url(../assets/images/ButtonOff.png);
 }
 
 .note-selector input:checked + .note-label {
-  background-image:url(../assets/imgs/ButtonOn.png);
+  background-image:url(../assets/images/ButtonOn.png);
   -webkit-filter: none;
      -moz-filter: none;
           filter: none;
