@@ -283,11 +283,6 @@ Game.prototype = {
     this.updateScoreText()
   },
 
-  // render: function () {
-  //   game.debug.text(`
-  //     Scores -- Player 1: ${players[0].score}\nPlayer 2: ${players[1].score}\n
-  //   `, 0, 100);
-  // },
   generateClouds: function () {
     this.clouds = this.clouds || {}
 

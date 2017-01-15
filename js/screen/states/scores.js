@@ -6,7 +6,7 @@ GameScores.prototype = {
 
     this.congratulationsText = game.make.text(game.world.centerX, 100, `Congratulations ${winningPlayer}`, {
       font: 'bold 60pt Comic Sans',
-      fill: '#FFD0A3',
+      fill: '#C54C00',
       align: 'center'
     });
 
@@ -17,7 +17,7 @@ GameScores.prototype = {
     let player2Score = players[1].score
     this.scoreText = game.make.text(game.world.centerX, 300, `Scores\nPlayer 1: ${player1Score}\t\tPlayer 2: ${player2Score}`, {
       font: 'bold 45pt Comic Sans',
-      fill: '#FFD0A3',
+      fill: '#C54C00',
       align: 'center'
     });
     this.scoreText.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
@@ -25,7 +25,7 @@ GameScores.prototype = {
 
     this.newGameText = game.make.text(game.world.centerX, 500, "New game will begin in 10 seconds.", {
       font: 'bold 45pt Comic Sans',
-      fill: '#FFD0A3',
+      fill: '#C54C00',
       align: 'center'
     });
 
