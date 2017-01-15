@@ -101,10 +101,9 @@ Game.prototype = {
           const play2 = notes2.animations.add('playNotes')
           notes2.animations.play('playNotes', 10, true)
         }
-
         // Calculate score for this player's submission.
-        for (let noteIndex = 0; noteIndex < self.currentSong.len; noteIndex++) {
-          let actual = self.currentSong.pattern[noteIndex]
+        for (let noteIndex = 0; noteIndex < currentSong.len; noteIndex++) {
+          let actual = currentSong.pattern[noteIndex]
           let guess = data.notes[noteIndex]
           let distance = Math.abs(actual - guess)
           if (distance >= 4) {
