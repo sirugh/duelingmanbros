@@ -37,12 +37,18 @@ const Game = function (game) {};
 Game.prototype = {
   currentSong: '',
   preload: function () {
+    game.load.image('german','assets/images/TestMan.png');
+    //game.load.spritesheet('notes','assets/images/NoteSpriteSheet129x283.png',129,283);
   },
   create: function () {
     // Display gameplay background
     this.sky        = game.add.image(0, 0, 'sky');
     this.mountains  = game.add.image(0, 0, 'mountains');
-
+    
+    // Create two german guys, one for each player
+    this.german1    = game.add.image(224, game.world.height+572,'german');
+    this.german2    = game.add.image(game.world.width-224, game.world.height+572, 'german');
+    this.german1.scale.x *= -1;
     emit('GAME_STARTING');
     // TODO: Display Instruction text (for some time?)
     displayInstructions()
@@ -190,6 +196,12 @@ Game.prototype = {
 
   update: function () {
     // Update stuff goes here.
+    if (this.german1.y > game.world.height-this.german1.height) {
+    	this.german1.y -= 3;
+    }
+    if (this.german2.y > game.world.height-this.german2.height) {
+    	this.german2.y -= 3;
+    }
   },
 
   render: function () {
