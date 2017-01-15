@@ -158,13 +158,13 @@ Game.prototype = {
     function displayGiantHead () {
       return new Promise((resolve, reject) => {
         //  We position the sprite in the middle of the game but off the top
-        const head = game.add.sprite(game.world.centerX, -200, 'german');
+        const head = game.add.sprite(game.world.centerX, -200, 'giant_head');
         head.anchor.set(0.5);
 
         //  Then we tween it in from the bottom of the game.
 
         //  It will end up at the middle of the game, as it's tweening TO the value given
-        const tween = game.add.tween(head).to( { y: game.world.centerY }, 4000, Phaser.Easing.Bounce.Out, true);
+        const tween = game.add.tween(head).to( { y: game.world.centerY + 100 }, 4000, Phaser.Easing.Bounce.Out, true);
         tween.onComplete.add(function () {
           resolve()
         })

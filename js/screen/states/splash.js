@@ -28,7 +28,7 @@ Splash.prototype = {
     game.load.image('cloud', 'assets/images/Cloud.png');
     game.load.image('german','assets/images/TestMan.png');
     game.load.spritesheet('notes','assets/images/NoteSpriteSheet129x283.png', 129, 283, 5);
-    game.load.image('head','assets/images/giant_head.png');
+    game.load.image('giant_head','assets/images/giant_head.png');
   },
 
   loadFonts: function () {
