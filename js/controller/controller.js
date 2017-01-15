@@ -14,6 +14,7 @@ airconsole.onMessage = function(device_id, data) {
   // A mapping of action-to-behaviors.
   const actions = {
     RESET_SONG: function (data) {
+      $submit.show()
       $overlay.text('Select the notes.')
       // Re-create the submission array at the specific length incase people forget to add a value.
       notes = Array.apply(null, Array(data.numNotes)).map(() => {})
@@ -85,7 +86,8 @@ const event_down = isMobile() ? 'touchstart' : 'mousedown';
 const event_up = isMobile() ? 'touchend' : 'mouseup';
 
 $('#submit').on('click', function() {
-  hideInput()
+  $submit.hide()
+
   $overlay.text('Please wait...')
 
   Array.from($('input:checked')).forEach(input => {
