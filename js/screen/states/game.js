@@ -18,18 +18,18 @@ const SONGS = [
     name: 'jailhouse_now',
     played: false
   },
-  {
-    name: 'zelda_theme',
-    played: false
-  },
-  {
-    name: 'james_bond',
-    played: false
-  },
-  {
-    name: 'good_bad_ugly',
-    played: false
-  }
+  // {
+  //   name: 'zelda_theme',
+  //   played: false
+  // },
+  // {
+  //   name: 'james_bond',
+  //   played: false
+  // },
+  // {
+  //   name: 'good_bad_ugly',
+  //   played: false
+  // }
 ];
 
 const Game = function (game) {};
@@ -50,7 +50,7 @@ Game.prototype = {
     this.german2    = game.add.image(game.world.width-224, game.world.height+572, 'german');
     this.german1.scale.x *= -1;
     emit('GAME_STARTING');
-    // TODO: Display Instruction text (for some time?)
+
     displayInstructions()
       .then(() => {
         emit('START');
@@ -61,6 +61,7 @@ Game.prototype = {
         sendNewSong(song)
       });
 
+    // On Receiving message from phone
     airconsole.onMessage = function(device_id, data) {
       const player = airconsole.convertDeviceIdToPlayerNumber(device_id);
 
@@ -106,9 +107,11 @@ Game.prototype = {
           sendNewSong(song)
         }
         else {
+
           console.log('No more songs. Game over!');
           //TODO game over.
-          // game.state.start('GameOver')
+          console.log(game.state.states);
+          game.state.start('Scores', true, false, players[0].score > players[1].score ? "Player 1" : "Player 2", players)
         }
       }
     };

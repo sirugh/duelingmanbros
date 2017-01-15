@@ -3,8 +3,12 @@ var Splash = function () {};
 Splash.prototype = {
 
   loadScripts: function () {
-    game.load.script('menu', 'js/screen/states/menu.js')
-    game.load.script('game', 'js/screen/states/game.js')
+    game.load.script('menu', 'js/screen/states/menu.js');
+    game.load.script('game', 'js/screen/states/game.js');
+    game.load.script('scores', 'js/screen/states/scores.js');
+
+    game.load.json('dueling_banjos_meta', 'assets/music/dueling_banjos.json');
+    game.load.json('jailhouse_now_meta', 'assets/music/jailhouse_now.json');
   },
 
   loadMusic: function () {
@@ -49,7 +53,7 @@ Splash.prototype = {
   addGameStates: function () {
     game.state.add('Menu', GameMenu);
     game.state.add('Game', Game);
-    // game.state.add("GameOver",GameOver);
+    game.state.add("Scores", GameScores);
   },
 
   create: function() {
