@@ -50,8 +50,11 @@ Game.prototype = {
 
     resetGame();
 
-    // Emit the first song.
-    sendNewSong(getNextSong());
+    displayGiantHead()
+      .then(function () {
+        // Emit the first song.
+        sendNewSong(getNextSong());
+      })
 
     function replayCurrentSong() {
       const width = game.cache.getImage(`${this.currentSong.name}_answer`).width;
@@ -151,6 +154,22 @@ Game.prototype = {
           })
       }
     };
+
+    function displayGiantHead () {
+      return new Promise((resolve, reject) => {
+        //  We position the sprite in the middle of the game but off the top
+        const head = game.add.sprite(game.world.centerX, -200, 'german');
+        head.anchor.set(0.5);
+
+        //  Then we tween it in from the bottom of the game.
+
+        //  It will end up at the middle of the game, as it's tweening TO the value given
+        const tween = game.add.tween(head).to( { y: game.world.centerY }, 4000, Phaser.Easing.Bounce.Out, true);
+        tween.onComplete.add(function () {
+          resolve()
+        })
+      })
+    }
 
     function resetGame() {
       if (music) {
