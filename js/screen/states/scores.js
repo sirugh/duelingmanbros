@@ -1,35 +1,41 @@
 var GameScores = function() {};
 
 GameScores.prototype = {
-  init: function (winningPlayer, scores) {
+  init: function (winningPlayer, players) {
     console.log(winningPlayer);
-    console.log(scores);
 
-    this.titleText = game.make.text(game.world.centerX, 100, "Congratulations Player 1", {
-      font: 'bold 60pt Comic Sans', //because I am a dick.
+    this.congratulationsText = game.make.text(game.world.centerX, 100, `Congratulations ${winningPlayer}`, {
+      font: 'bold 60pt Comic Sans',
       fill: '#FFD0A3',
       align: 'center'
     });
 
-    this.titleText.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
-    this.titleText.anchor.set(0.5);
+    this.congratulationsText.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
+    this.congratulationsText.anchor.set(0.5);
 
-    this.waitingText = game.make.text(game.world.centerX, 300, "Scores\nPlayer 1: 100\t\tPlayer 2: 200", {
+    let player1Score = players[0].score
+    let player2Score = players[1].score
+    this.scoreText = game.make.text(game.world.centerX, 300, `Scores\nPlayer 1: ${player1Score}\t\tPlayer 2: ${player2Score}`, {
       font: 'bold 45pt Comic Sans',
       fill: '#FFD0A3',
       align: 'center'
     });
-    this.waitingText.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
-    this.waitingText.anchor.set(0.5);
+    this.scoreText.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
+    this.scoreText.anchor.set(0.5);
+
+    this.newGameText = game.make.text(game.world.centerX, 500, "New game will begin in 10 seconds.", {
+      font: 'bold 45pt Comic Sans',
+      fill: '#FFD0A3',
+      align: 'center'
+    });
+
+    this.newGameText.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
+    this.newGameText.anchor.set(0.5);
 
     // Restart game after 5 seconds
     setTimeout(function () {
       game.state.start('Game')
-    }, 5000)
-
-  },
-  preload: function () {
-    game.load.audio('background_music', 'assets/music/jailhouse_now_full.mp3');
+    }, 10000)
   },
 
   create: function () {
@@ -39,8 +45,10 @@ GameScores.prototype = {
     this.generateClouds()
     this.mountains  = game.add.image(0, 0, 'mountains')
     game.stage.disableVisibilityChange = true;
-    game.add.existing(this.titleText);
-    game.add.existing(this.waitingText);
+
+    game.add.existing(this.congratulationsText);
+    game.add.existing(this.scoreText);
+    game.add.existing(this.newGameText);
   },
   generateClouds: function () {
     this.clouds = this.clouds || {}

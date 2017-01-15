@@ -13,9 +13,6 @@ const $overlay = $('#overlay')
 airconsole.onMessage = function(device_id, data) {
   // A mapping of action-to-behaviors.
   const actions = {
-    START: function (data) {
-      console.log('SCREEN HAS TRIGGERED START EVENT')
-    },
     RESET_SONG: function (data) {
       $overlay.text()
       // Re-create the submission array at the specific length incase people forget to add a value.
