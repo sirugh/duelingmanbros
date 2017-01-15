@@ -97,21 +97,32 @@ Game.prototype = {
           console.log(player.score)
         });
 
-        let song = getNextSong();
-        if (song) {
-          sendNewSong(song)
-        }
-        else {
-          console.log('No more songs. Game over!');
-          // Tell the controllers the game is over.
-          emit('END_GAME')
+        this.displayCorrectAnswer(song)
+          .then(function () {
+            let song = getNextSong();
+            if (song) {
+              sendNewSong(song)
+            }
+            else {
+              console.log('No more songs. Game over!');
+              // Tell the controllers the game is over.
+              emit('END_GAME')
 
-          // Display the end game scene.
-          const winner = players[0].score > players[1].score ? 'Player 1' : 'Player 2'
-          game.state.start('Scores', true, false, winner, players)
-        }
+              // Display the end game scene.
+              const winner = players[0].score > players[1].score ? 'Player 1' : 'Player 2'
+              game.state.start('Scores', true, false, winner, players)
+            }
+          })
       }
     };
+
+    function displayCorrectAnswer () {
+      return new Promise((resolve, reject) => {
+        console.log(`Displaying answer for ${this.currentSong}`)
+        //TODO Display current song image for a few seconds.
+        resolve()
+      })
+    }
 
     function resetGame() {
       if (music) {
