@@ -6,7 +6,7 @@ GameMenu.prototype = {
   init: function () {
     this.titleText = game.make.text(game.world.centerX, 100, "Welcome to Dueling Man-Bros", {
       font: 'bold 60pt Comic Sans', //because I am a dick.
-      fill: '#FFD0A3',
+      fill: '#C54C00',
       align: 'center'
     });
 
@@ -15,7 +15,7 @@ GameMenu.prototype = {
 
     this.waitingText = game.make.text(game.world.centerX, 300, "Connect using the code to play!", {
       font: 'bold 45pt Comic Sans',
-      fill: '#FFD0A3',
+      fill: '#C54C00',
       align: 'center'
     });
     this.waitingText.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
@@ -128,15 +128,15 @@ GameMenu.prototype = {
   displayInstructions: function () {
     game.add.tween(this.titleText).to( { alpha: 0 }, 1000, "Linear", true);
     game.add.tween(this.waitingText).to( { alpha: 0 }, 1000, "Linear", true);
-    const INSTRUCTION_TIMEOUT = 10000; //TODO: set to 10000 when playing fo real
+    const INSTRUCTION_TIMEOUT = 15000;
     return new Promise((resolve, reject) => {
       const instructionText = "- Instructions -\n" +
                       "1. Listen to the sound clip.\n" +
                       "2. Use the staff to enter what you think you hear.\n" +
                       "3. The closer you are, the more points you get!\n" +
                       "4. Highest score at the end wins the game.";
-      const style = { font: "65px Arial", fill: "#ff0044", align: "center" };
-      const text = game.add.text(game.world.centerX, game.world.centerY, instructionText, style);
+      const style = { font: "65px Arial", fill: "#C54C00", align: "center" };
+      const text = game.add.text(game.world.centerX, game.world.centerY - 300, instructionText, style);
       text.anchor.set(0.5);
       text.alpha = 1;
 
