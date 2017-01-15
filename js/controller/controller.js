@@ -59,6 +59,7 @@ airconsole.onMessage = function(device_id, data) {
     },
     WAITING_FOR_PLAYERS: function (data) {
       console.log('STILL WAITING ON PLAYERS')
+      $staff.empty()
     },
     GAME_STARTING: function (data) {
       console.log('GAME STARTING')
@@ -67,6 +68,7 @@ airconsole.onMessage = function(device_id, data) {
     },
     END_GAME: function (data) {
       console.log('GAME END')
+      $staff.empty()
     }
   }
 

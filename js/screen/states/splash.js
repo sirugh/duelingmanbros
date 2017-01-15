@@ -51,8 +51,41 @@ Splash.prototype = {
     this.status.setText('Ready!');
     this.addGameStates();
 
+    this.createDeviceListeners();
+
     setTimeout(function () {
       game.state.start('Menu');
     }, 1000);
-  }
+  },
+  /**
+   * Sets up airconsole listeners.
+   */
+  createDeviceListeners: function () {
+    airconsole.onConnect = function () {
+      var connected_controllers = airconsole.getControllerDeviceIds();
+      if (connected_controllers.length >= 2) {
+        console.log('2 players connected. Starting game.')
+        airconsole.setActivePlayers(2);
+        emit('GAME_STARTING')
+        if (music) {
+          music.stop()
+        }
+        game.state.start('Game')
+      }
+      else {
+        emit('WAITING_FOR_PLAYERS')
+      }
+    }
+
+    airconsole.onDisconnect =  function (device_id) {
+      const player = airconsole.convertDeviceIdToPlayerNumber(device_id);
+      console.log(`Player ${player} disconnected. Going back to menu.`)
+
+      emit('WAITING_FOR_PLAYERS')
+
+      if (game.state.current !== 'Menu') {
+        game.state.start('Menu')
+      }
+    }
+  },
 };
