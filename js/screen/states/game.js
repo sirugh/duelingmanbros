@@ -48,6 +48,23 @@ Game.prototype = {
     this.german2    = game.add.image(game.world.width-224, game.world.height+572, 'german');
     this.german1.scale.x *= -1;
 
+
+    this.p1ScoreText = game.make.text(140, 100, `Player 1\n${players[0].score}`, {
+      font: 'bold 45pt Comic Sans',
+      fill: '#C54C00',
+      align: 'left'
+    });
+    this.p1ScoreText.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
+    this.p1ScoreText.anchor.set(0.5);
+
+    this.p2ScoreText = game.make.text(game.world.width-140, 100, `Player 2\n${players[1].score}`, {
+      font: 'bold 45pt Comic Sans',
+      fill: '#C54C00',
+      align: 'right'
+    });
+    this.p2ScoreText.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
+    this.p2ScoreText.anchor.set(0.5);
+
     resetGame();
 
     displayGiantHead()
@@ -55,6 +72,9 @@ Game.prototype = {
         // Emit the first song.
         sendNewSong(getNextSong());
       })
+
+    game.add.existing(this.p1ScoreText);
+    game.add.existing(this.p2ScoreText);
 
     function replayCurrentSong() {
       const width = game.cache.getImage(`${this.currentSong.name}_answer`).width;
@@ -137,6 +157,7 @@ Game.prototype = {
             players.forEach(player => {
               console.log(player.score)
             });
+
 
             let song = getNextSong();
             if (song) {
@@ -246,7 +267,10 @@ Game.prototype = {
       })
     }
   },
-
+  updateScoreText: function () {
+    this.p1ScoreText.setText(`Player 1\n${players[0].score}`);
+    this.p2ScoreText.setText(`Player 2\n${players[1].score}`);
+  },
   update: function () {
     // Update stuff goes here.
     if (this.german1.y > game.world.height-this.german1.height) {
@@ -256,13 +280,14 @@ Game.prototype = {
     	this.german2.y -= 10;
     }
     this.updateClouds()
+    this.updateScoreText()
   },
 
-  render: function () {
-    game.debug.text(`
-      Scores -- Player 1: ${players[0].score}\nPlayer 2: ${players[1].score}\n
-    `, 0, 100);
-  },
+  // render: function () {
+  //   game.debug.text(`
+  //     Scores -- Player 1: ${players[0].score}\nPlayer 2: ${players[1].score}\n
+  //   `, 0, 100);
+  // },
   generateClouds: function () {
     this.clouds = this.clouds || {}
 
