@@ -1,12 +1,3 @@
-/** OLD, PRE-STATE MANAGEMENT CODE */
-const STATE = {
-  WAITING: 0, // Waiting for more players to join
-  PLAYING: 1, // Players selecting notes
-  RESULTS: 2, // Showing results of players input, updating
-};
-
-let currentState = STATE.WAITING;
-
 const players = [
   {
     score: 0,
@@ -92,6 +83,7 @@ Game.prototype = {
         else {
           console.log('No more songs. Game over!');
           //TODO game over.
+          // game.state.start('GameOver')
         }
       }
     };
@@ -179,11 +171,3 @@ Game.prototype = {
     // Update stuff goes here.
   }
 };
-
-function playClip(clip) {
-  // play sound
-}
-
-function stopClip() {
-  // stop sound
-}
