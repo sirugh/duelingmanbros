@@ -57,17 +57,16 @@ airconsole.onMessage = function(device_id, data) {
       // navigator.vibrate(1000);
     },
     WAITING_FOR_PLAYERS: function (data) {
-      console.log('STILL WAITING ON PLAYERS')
+      $overlay.text('Waiting for another player.')
       hideInput()
     },
     GAME_STARTING: function (data) {
-      $overlay.text('Game about to start!')
+      $overlay.text('Get Ready!')
       // Hide the overlay
       hideInput()
       // Display the staff
     },
     END_GAME: function (data) {
-      console.log('GAME END')
       hideInput()
       $overlay.text('Game over! Thanks for playing!')
     }

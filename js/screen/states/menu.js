@@ -132,7 +132,7 @@ GameMenu.prototype = {
       const instructionText = "- Instructions -\n" +
                       "1. Listen to the sound clip.\n" +
                       "2. Use the staff to enter what you think you hear.\n" +
-                      "3. The player who guessed closest gets points!\n" +
+                      "3. The closer you are, the more points you get!\n" +
                       "4. Highest score at the end wins the game.";
       const style = { font: "65px Arial", fill: "#ff0044", align: "center" };
       const text = game.add.text(game.world.centerX, game.world.centerY, instructionText, style);
