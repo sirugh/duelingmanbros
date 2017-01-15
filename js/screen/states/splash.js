@@ -31,14 +31,11 @@ Splash.prototype = {
 
   init: function () {
     this.loadingBar = game.make.sprite(game.world.centerX-(387/2), 400, "loading");
-    // this.logo       = game.make.sprite(game.world.centerX, 200, 'brand');
     this.status     = game.make.text(game.world.centerX, 380, 'Loading...', {fill: 'white'});
     utils.centerGameObjects([this.status]);
   },
 
   preload: function () {
-    // game.add.sprite(0, 0, 'stars');
-    // game.add.existing(this.logo).scale.setTo(0.5);
     game.add.existing(this.loadingBar);
     game.add.existing(this.status);
     this.load.setPreloadSprite(this.loadingBar);

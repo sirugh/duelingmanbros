@@ -35,6 +35,7 @@ const SONGS = [
 const Game = function (game) {};
 
 Game.prototype = {
+  currentSong: '',
   preload: function () {
   },
   create: function () {
@@ -62,16 +63,36 @@ Game.prototype = {
         console.log(`player ${player} submitted ${data.notes}`);
         players[player].notes = data.notes;
         //TODO: Show submitted animation (dude sings at opponent with musical notes)
+
+        // Calculate score for this player's submission.
+        for (let noteIndex = 0; noteIndex < currentSong.len; noteIndex++) {
+          let actual = currentSong.pattern[noteIndex]
+          let guess = data.notes[noteIndex]
+          let distance = Math.abs(actual - guess)
+          if (distance >= 4) {
+            players[player].score += 1
+          }
+          else if (distance >= 3) {
+            players[player].score += 2
+          }
+          else if (distance >= 2) {
+            players[player].score += 5
+          }
+          else if (distance >= 1) {
+            players[player].score += 8
+          }
+          else {
+            players[player].score += 10
+          }
+        }
       }
 
       if (players[0].notes.length && players[1].notes.length) {
         console.log('Both players submitted!');
-        // Do score calculations.
-        // TODO: Compare against state.song.notes
 
         // Perform animations: http://phaser.io/examples/v2/animation/animation-events
         players.forEach(player => {
-
+          console.log(player.score)
         });
 
         let song = getNextSong();
@@ -152,21 +173,21 @@ Game.prototype = {
       music.play();
       music.onStop.add(function () {
          // Then transmit song data to controllers so they can play.
-        const song_meta = game.cache.getJSON(`${songName}_meta`);
 
         for (var i = 1; i <= 2; i++) {
           airconsole.message(
             airconsole.convertPlayerNumberToDeviceId(i),
             {
               action: 'RESET_SONG',
-              song: song_meta.name,
-              numNotes: song_meta.pattern.length,
-              startingNote: song_meta.start
+              song: this.currentSong.name,
+              numNotes: this.currentSong.pattern.length,
+              startingNote: this.currentSong.start
             })
         }
       })
     }
   },
+
   update: function () {
     // Update stuff goes here.
   },
