@@ -18,18 +18,18 @@ const SONGS = [
     name: 'jailhouse_now',
     played: false
   },
-  // {
-  //   name: 'zelda_theme',
-  //   played: false
-  // },
-  // {
-  //   name: 'james_bond',
-  //   played: false
-  // },
-  // {
-  //   name: 'good_bad_ugly',
-  //   played: false
-  // }
+  {
+    name: 'zelda_theme',
+    played: false
+  },
+  {
+    name: 'james_bond',
+    played: false
+  },
+  {
+    name: 'good_bad_ugly',
+    played: false
+  }
 ];
 
 const Game = function (game) {};
@@ -125,6 +125,25 @@ Game.prototype = {
       SONGS.forEach(song => {
         song.played = false
       });
+      shuffleSongs();
+    }
+
+    function shuffleSongs() {
+      let counter = SONGS.length;
+
+      // While there are elements in the array
+      while (counter > 0) {
+        // Pick a random index
+        let index = Math.floor(Math.random() * counter);
+
+        // Decrease counter by 1
+        counter--;
+
+        // And swap the last element with it
+        let temp = SONGS[counter];
+        SONGS[counter] = SONGS[index];
+        SONGS[index] = temp;
+      }
     }
 
     /**
