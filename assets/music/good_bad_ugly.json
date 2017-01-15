@@ -1,5 +1,5 @@
 {
-  "name": "The Good, The bad, and The Ugly",
+  "name": "good_bad_ugly",
   "start": 4,
   "len": 8,
   "pattern": [4,5,4,5,4,1,2,0]

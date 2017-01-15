@@ -1,5 +1,5 @@
 {
-  "name": "The Legend of Zelda Theme",
+  "name": "zelda_theme",
   "start": 1,
   "len": 8,
   "pattern": [1,0,1,1,2,3,4,5]

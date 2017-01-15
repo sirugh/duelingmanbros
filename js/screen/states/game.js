@@ -33,14 +33,11 @@ const SONGS = [
 ];
 
 const Game = function (game) {};
-
+let notes1, notes2
 Game.prototype = {
   currentSong: '',
-  preload: function () {
-    game.load.image('german','assets/images/TestMan.png');
-    //game.load.spritesheet('notes','assets/images/NoteSpriteSheet129x283.png',129,283);
-  },
   create: function () {
+    const self = this;
     // Display gameplay background
     this.sky        = game.add.image(0, 0, 'sky');
     this.generateClouds()
@@ -56,6 +53,33 @@ Game.prototype = {
     // Emit the first song.
     sendNewSong(getNextSong());
 
+    function replayCurrentSong() {
+      const width = game.cache.getImage(`${this.currentSong.name}_answer`).width;
+      const height = game.cache.getImage(`${this.currentSong.name}_answer`).height;
+
+      const x = (game.world.width / 2) - (width / 2)
+      const y = (game.world.height / 2) - (height / 2)
+      const answer = game.add.image(x, y, `${this.currentSong.name}_answer`);
+      return new Promise ((resolve, reject) => {
+        music.play();
+        music.onStop.addOnce(function () {
+          console.log('Song playback finished.')
+          const tween = game.add.tween(answer).to( { alpha: 0 }, 1000, "Linear", true);
+          tween.onComplete.add(function () {
+            answer.kill()
+            resolve()
+          })
+        })
+      })
+    }
+
+    function stopNoteAnimation(note) {
+      notes1.animations.stop()
+      notes2.animations.stop()
+      notes1.kill()
+      notes2.kill()
+    }
+
     // On Receiving message from phone
     airconsole.onMessage = function(device_id, data) {
       const player = airconsole.convertDeviceIdToPlayerNumber(device_id);
@@ -64,11 +88,23 @@ Game.prototype = {
       if (typeof player !== 'undefined' && data.notes) {
         console.log(`player ${player} submitted ${data.notes}`);
         players[player].notes = data.notes;
-        //TODO: Show submitted animation (dude sings at opponent with musical notes)
+
+        // Play animations for the player who just submitted.
+        if(player === 0) {
+          notes1 = game.add.sprite(224, game.world.height - self.german1.height - 100, 'notes')
+          const play1 = notes1.animations.add('playNotes')
+          notes1.animations.play('playNotes', 10, true)
+        }
+        else if (player === 1) {
+          notes2 =  game.add.sprite(game.world.width - 224, game.world.height - self.german1.height - 100, 'notes')
+          notes2.scale.x *= -1;
+          const play2 = notes2.animations.add('playNotes')
+          notes2.animations.play('playNotes', 10, true)
+        }
 
         // Calculate score for this player's submission.
-        for (let noteIndex = 0; noteIndex < currentSong.len; noteIndex++) {
-          let actual = currentSong.pattern[noteIndex]
+        for (let noteIndex = 0; noteIndex < self.currentSong.len; noteIndex++) {
+          let actual = self.currentSong.pattern[noteIndex]
           let guess = data.notes[noteIndex]
           let distance = Math.abs(actual - guess)
           if (distance >= 4) {
@@ -91,14 +127,15 @@ Game.prototype = {
 
       if (players[0].notes.length && players[1].notes.length) {
         console.log('Both players submitted!');
-
-        // Perform animations: http://phaser.io/examples/v2/animation/animation-events
-        players.forEach(player => {
-          console.log(player.score)
-        });
-
-        this.displayCorrectAnswer(song)
+        replayCurrentSong()
           .then(function () {
+            stopNoteAnimation();
+
+            // Display Score Changes
+            players.forEach(player => {
+              console.log(player.score)
+            });
+
             let song = getNextSong();
             if (song) {
               sendNewSong(song)
@@ -115,14 +152,6 @@ Game.prototype = {
           })
       }
     };
-
-    function displayCorrectAnswer () {
-      return new Promise((resolve, reject) => {
-        console.log(`Displaying answer for ${this.currentSong}`)
-        //TODO Display current song image for a few seconds.
-        resolve()
-      })
-    }
 
     function resetGame() {
       if (music) {
@@ -200,10 +229,10 @@ Game.prototype = {
   update: function () {
     // Update stuff goes here.
     if (this.german1.y > game.world.height-this.german1.height) {
-    	this.german1.y -= 3;
+    	this.german1.y -= 10;
     }
     if (this.german2.y > game.world.height-this.german2.height) {
-    	this.german2.y -= 3;
+    	this.german2.y -= 10;
     }
     this.updateClouds()
   },

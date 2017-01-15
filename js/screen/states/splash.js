@@ -16,6 +16,7 @@ Splash.prototype = {
     titles.forEach(title => {
       game.load.audio(title, `assets/music/${title}.mp3`)
       game.load.json(`${title}_meta`, `assets/music/${title}.json`);
+      game.load.image(`${title}_answer`, `assets/music/${title}_answer.png`)
     })
 
     game.load.audio('background_music', 'assets/music/jailhouse_now_full.mp3');
@@ -25,6 +26,8 @@ Splash.prototype = {
     game.load.image('mountains', 'assets/images/layer-2-mountain-grey.png');
     game.load.image('sky', 'assets/images/Background-sky-cloudless.png');
     game.load.image('cloud', 'assets/images/Cloud.png');
+    game.load.image('german','assets/images/TestMan.png');
+    game.load.spritesheet('notes','assets/images/NoteSpriteSheet129x283.png', 129, 283, 5);
   },
 
   loadFonts: function () {
