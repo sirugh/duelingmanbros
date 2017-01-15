@@ -66,7 +66,6 @@ Splash.prototype = {
       if (connected_controllers.length >= 2) {
         console.log('2 players connected. Starting game.')
         airconsole.setActivePlayers(2);
-        emit('GAME_STARTING')
         if (music) {
           music.stop()
         }

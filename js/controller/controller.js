@@ -1,5 +1,3 @@
-const NOTES = [0,1,2,3,4,5]
-
 // =======================================
 // Create the AirConsole instance
 // =======================================
@@ -7,9 +5,11 @@ const airconsole = new AirConsole({
   orientation: AirConsole.ORIENTATION_LANDSCAPE
 });
 
-// Notes is an array that correlates to the different notes on the staff.
-let notes = []
+let notes;
 const $staff = $('#staff')
+const $submit = $('#submit')
+const $overlay = $('#overlay')
+
 airconsole.onMessage = function(device_id, data) {
   // A mapping of action-to-behaviors.
   const actions = {
@@ -17,8 +17,9 @@ airconsole.onMessage = function(device_id, data) {
       console.log('SCREEN HAS TRIGGERED START EVENT')
     },
     RESET_SONG: function (data) {
-      notes = new Array(data.numNotes)
-      notes[0] = data.startingNote
+      $overlay.text()
+      // Re-create the submission array at the specific length incase people forget to add a value.
+      notes = Array.apply(null, Array(data.numNotes)).map(() => {})
 
       // Generate the new staff top-down, left-right.
       $staff.empty()
@@ -50,6 +51,7 @@ airconsole.onMessage = function(device_id, data) {
         }
 
         $staff.append($row)
+        showInput()
       }
 
       // Check the first note for the player. Cause we be nice.
@@ -59,16 +61,17 @@ airconsole.onMessage = function(device_id, data) {
     },
     WAITING_FOR_PLAYERS: function (data) {
       console.log('STILL WAITING ON PLAYERS')
-      $staff.empty()
+      hideInput()
     },
     GAME_STARTING: function (data) {
       console.log('GAME STARTING')
-      // Hide the overaly
+      // Hide the overlay
       // Display the staff
     },
     END_GAME: function (data) {
       console.log('GAME END')
-      $staff.empty()
+      hideInput()
+      $overlay.text('Game over! Thanks for playing.')
     }
   }
 
@@ -85,18 +88,29 @@ const event_down = isMobile() ? 'touchstart' : 'mousedown';
 const event_up = isMobile() ? 'touchend' : 'mouseup';
 
 $('#submit').on('click', function() {
+  hideInput()
+  $overlay.text('Please wait...')
+
+  Array.from($('input:checked')).forEach(input => {
+    const row = input.value[0]
+    const column = input.value[2]
+    notes[column] = row
+  })
+
   // Send the AirConsole Screen that we PRESSED the left button
   airconsole.message(AirConsole.SCREEN, {
-    action: 'submit',
-    notes: ['c', 'b', 'g', 'b#']
+    action: 'SUBMIT',
+    notes: notes
   });
 });
 
-$('.note').on('click', function () {
-  // TODO: Set column based on where this was clicked in the table.
-  const column = 0
 
-  // TODO: Set based on actual note value
-  notes[column] = 'a'
-})
+function hideInput () {
+  $staff.hide()
+  $submit.hide()
+}
 
+function showInput () {
+  $staff.show()
+  $submit.show()
+}

@@ -23,7 +23,7 @@ GameMenu.prototype = {
   },
 
   preload: function () {
-    game.load.audio('jailhouse', 'assets/music/jailhouse_now_full.mp3');
+    game.load.audio('background_music', 'assets/music/jailhouse_now_full.mp3');
   },
 
   create: function () {
@@ -43,7 +43,7 @@ GameMenu.prototype = {
       music.stop()
     }
 
-    music = game.add.audio('jailhouse');
+    music = game.add.audio('background_music');
     music.loop = true;
     music.play();
   },
