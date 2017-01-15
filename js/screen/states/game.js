@@ -17,39 +17,51 @@ const SONGS = [
   {
     name: 'jailhouse_now',
     played: false
+  },
+  {
+    name: 'zelda_theme',
+    played: false
+  },
+  {
+    name: 'james_bond',
+    played: false
+  },
+  {
+    name: 'good_bad_ugly',
+    played: false
   }
 ];
 
-const Game = function (game) {}
+const Game = function (game) {};
 
 Game.prototype = {
   preload: function () {
-    game.load.audio('jailhouse_now', 'assets/music/jailhouse_now.mp3')
+    game.load.audio('jailhouse_now', 'assets/music/jailhouse_now.mp3');
     game.load.audio('dueling_banjos', 'assets/music/dueling_banjos.mp3')
   },
   create: function () {
     // Display gameplay background
-    this.sky        = game.add.image(0, 0, 'sky')
-    this.mountains  = game.add.image(0, 0, 'mountains')
+    this.sky        = game.add.image(0, 0, 'sky');
+    this.mountains  = game.add.image(0, 0, 'mountains');
 
-    emit('GAME_STARTING')
+    emit('GAME_STARTING');
     // TODO: Display Instruction text (for some time?)
     displayInstructions()
       .then(() => {
-        emit('START')
-        resetGame()
+        emit('START');
+        resetGame();
 
         // Emit the first song.
-        let song = getNextSong()
+        let song = getNextSong();
         sendNewSong(song)
-      })
+      });
 
     airconsole.onMessage = function(device_id, data) {
       const player = airconsole.convertDeviceIdToPlayerNumber(device_id);
 
       // Store any input.
       if (typeof player !== 'undefined' && data.notes) {
-        console.log(`player ${player} submitted ${data.notes}`)
+        console.log(`player ${player} submitted ${data.notes}`);
         players[player].notes = data.notes;
         //TODO: Show submitted animation (dude sings at opponent with musical notes)
       }
@@ -64,12 +76,12 @@ Game.prototype = {
 
         });
 
-        let song = getNextSong()
+        let song = getNextSong();
         if (song) {
           sendNewSong(song)
         }
         else {
-          console.log('No more songs. Game over!')
+          console.log('No more songs. Game over!');
           //TODO game over.
           // game.state.start('GameOver')
         }
@@ -77,13 +89,13 @@ Game.prototype = {
     };
 
     function displayInstructions (callback) {
-      const INSTRUCTION_TIMEOUT = 1000//TODO: set to 10000 when playing fo real
+      const INSTRUCTION_TIMEOUT = 1000; //TODO: set to 10000 when playing fo real
       return new Promise((resolve, reject) => {
         const instructionText = "- Instructions -\n" +
                         "1. Listen to the sound clip.\n" +
                         "2. Use the staff to enter what you think you hear.\n" +
                         "3. The player who guessed closest gets points!\n" +
-                        "4. Highest score at the end wins the game."
+                        "4. Highest score at the end wins the game.";
         const style = { font: "65px Arial", fill: "#ff0044", align: "center" };
         const text = game.add.text(game.world.centerX, game.world.centerY, instructionText, style);
         text.anchor.set(0.5);
@@ -158,4 +170,4 @@ Game.prototype = {
   update: function () {
     // Update stuff goes here.
   }
-}
+};
