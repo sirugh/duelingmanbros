@@ -25,6 +25,8 @@ Splash.prototype = {
     game.load.image('mountains', 'assets/images/layer-2-mountain-grey.png');
     game.load.image('sky', 'assets/images/Background-sky-cloudless.png');
     game.load.image('cloud', 'assets/images/Cloud.png');
+    game.load.image('german','assets/images/TestMan.png');
+    game.load.spritesheet('notes','assets/images/NoteSpriteSheet129x283.png', 129, 283, 5);
   },
 
   loadFonts: function () {
