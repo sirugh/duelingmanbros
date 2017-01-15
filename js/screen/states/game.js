@@ -156,19 +156,13 @@ Game.prototype = {
       console.log(`Playing ${this.currentSong.name}`)
       music = game.add.audio(songName);
       music.play();
-      music.onStop.add(function () {
+      music.onStop.addOnce(function () {
          // Then transmit song data to controllers so they can play.
-
-        for (var i = 1; i <= 2; i++) {
-          airconsole.message(
-            airconsole.convertPlayerNumberToDeviceId(i),
-            {
-              action: 'RESET_SONG',
-              song: this.currentSong.name,
-              numNotes: this.currentSong.pattern.length,
-              startingNote: this.currentSong.start
-            })
-        }
+        emit('RESET_SONG', {
+          song: this.currentSong.name,
+          numNotes: this.currentSong.pattern.length,
+          startingNote: this.currentSong.start
+        })
       })
     }
   },

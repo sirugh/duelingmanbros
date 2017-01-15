@@ -14,7 +14,7 @@ airconsole.onMessage = function(device_id, data) {
   // A mapping of action-to-behaviors.
   const actions = {
     RESET_SONG: function (data) {
-      $overlay.text()
+      $overlay.text('Select the notes.')
       // Re-create the submission array at the specific length incase people forget to add a value.
       notes = Array.apply(null, Array(data.numNotes)).map(() => {})
 
@@ -61,7 +61,7 @@ airconsole.onMessage = function(device_id, data) {
       hideInput()
     },
     GAME_STARTING: function (data) {
-      console.log('GAME STARTING')
+      $overlay.text('Game about to start!')
       // Hide the overlay
       hideInput()
       // Display the staff
