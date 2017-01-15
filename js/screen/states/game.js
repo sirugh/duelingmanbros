@@ -33,7 +33,7 @@ const SONGS = [
 ];
 
 const Game = function (game) {};
-let notes1, notes2
+let notes1, notes2, head, headVoice
 Game.prototype = {
   currentSong: '',
   create: function () {
@@ -94,12 +94,12 @@ Game.prototype = {
 
         // Play animations for the player who just submitted.
         if(player === 0) {
-          notes1 = game.add.sprite(224, game.world.height - self.german1.height - 100, 'notes')
+          notes1 = game.add.sprite(224, game.world.height - self.german1.height - 175, 'notes')
           const play1 = notes1.animations.add('playNotes')
           notes1.animations.play('playNotes', 10, true)
         }
         else if (player === 1) {
-          notes2 =  game.add.sprite(game.world.width - 224, game.world.height - self.german1.height - 100, 'notes')
+          notes2 =  game.add.sprite(game.world.width - 224, game.world.height - self.german1.height - 175, 'notes')
           notes2.scale.x *= -1;
           const play2 = notes2.animations.add('playNotes')
           notes2.animations.play('playNotes', 10, true)
@@ -146,10 +146,14 @@ Game.prototype = {
               console.log('No more songs. Game over!');
               // Tell the controllers the game is over.
               emit('END_GAME')
-
-              // Display the end game scene.
-              const winner = players[0].score > players[1].score ? 'Player 1' : 'Player 2'
-              game.state.start('Scores', true, false, winner, players)
+              headVoice = game.add.audio('i_like_what_you_got');
+              headVoice.play();
+              const tween = game.add.tween(head).to( { y: -200 }, 4000, 'Linear', true);
+              tween.onComplete.add(function () {
+                // Display the end game scene.
+                const winner = players[0].score > players[1].score ? 'Player 1' : 'Player 2'
+                game.state.start('Scores', true, false, winner, players)
+              })
             }
           })
       }
@@ -158,13 +162,12 @@ Game.prototype = {
     function displayGiantHead () {
       return new Promise((resolve, reject) => {
         //  We position the sprite in the middle of the game but off the top
-        const head = game.add.sprite(game.world.centerX, -200, 'giant_head');
+        head = game.add.sprite(game.world.centerX, -200, 'giant_head');
         head.anchor.set(0.5);
-
-        //  Then we tween it in from the bottom of the game.
-
+        headVoice = game.add.audio('show_me_what_you_got');
+        headVoice.play();
         //  It will end up at the middle of the game, as it's tweening TO the value given
-        const tween = game.add.tween(head).to( { y: game.world.centerY + 100 }, 4000, Phaser.Easing.Bounce.Out, true);
+        const tween = game.add.tween(head).to( { y: game.world.centerY - 100 }, 4000, Phaser.Easing.Bounce.Out, true);
         tween.onComplete.add(function () {
           resolve()
         })

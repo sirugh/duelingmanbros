@@ -20,13 +20,15 @@ Splash.prototype = {
     })
 
     game.load.audio('background_music', 'assets/music/jailhouse_now_full.mp3');
+    game.load.audio('i_like_what_you_got', 'assets/music/i_like_what_you_got.mp3');
+    game.load.audio('show_me_what_you_got', 'assets/music/show_me_what_you_got.mp3');
   },
   // varios freebies found from google image search
   loadImages: function () {
     game.load.image('mountains', 'assets/images/layer-2-mountain-grey.png');
     game.load.image('sky', 'assets/images/Background-sky-cloudless.png');
     game.load.image('cloud', 'assets/images/Cloud.png');
-    game.load.image('german','assets/images/TestMan.png');
+    game.load.image('german','assets/images/GermanGuy.png');
     game.load.spritesheet('notes','assets/images/NoteSpriteSheet129x283.png', 129, 283, 5);
     game.load.image('giant_head','assets/images/giant_head.png');
   },
